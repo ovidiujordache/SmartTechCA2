@@ -1,4 +1,4 @@
-In this folder "data" is where recorded data from driving laps is living.
+In this folder "data", is where recorded data from driving laps is living.
 track_1 and track_2 folders have three subfolders : one_lap, two_lap, three.
 They represent data from one lap(each way)
-two laps(each way) and three lapts(each way) respectively
+two laps(each way) and three laps(each way) respectively
