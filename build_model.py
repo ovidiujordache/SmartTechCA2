@@ -8,35 +8,38 @@ class BuildModel:
 		pass
 
 
-datadir = "/home/ovi/PROJECTS_YEAR_4/SMART_TECH/SmartTechCA2Data/track_1/three_lap/"
+datadir = "/home/ovi/PROJECTS_YEAR_4/SMART_TECH/SmartTechCA2Data/track_1/one_lap/"
 columns = ['center', 'left', 'right', 'steering', 'throttle', 'reverse', 'speed']
 data = pd.read_csv(os.path.join(datadir, 'driving_log.csv'), names = columns)
-print(data.head)
+# print(data.head)
 
 def path_leaf(path):
   head, tail = ntpath.split(path)
+
+
   return tail
 
 data['center'] = data['center'].apply(path_leaf)
 data['left'] = data['left'].apply(path_leaf)
 data['right'] = data['right'].apply(path_leaf)
 
-print(data.head)
-
-def path_leaf(path):
-  head, tail = ntpath.split(path)
-  return tail
 
 
-data['center'] = data['center'].apply(path_leaf)
-data['left'] = data['left'].apply(path_leaf)
-data['right'] = data['right'].apply(path_leaf)
 
-num_bins = 25
+
+num_bins = 15
 hist, bins = np.histogram(data['steering'], num_bins)
-print(bins)
+# print(bins)
+# plt.hist(data['steering'], bins=num_bins, alpha=0.5, color='blue', edgecolor='black')
 
-samples_per_bin = 250
+# # Add labels and title
+# plt.xlabel('Steering Angle')
+# plt.ylabel('Frequency')
+# plt.title('Steering Angle Histogram')
+
+# # Show the plot
+# plt.show()
+samples_per_bin = 175
 
 remove_list = []
 for j in range(num_bins):
@@ -48,22 +51,49 @@ for j in range(num_bins):
   list_ = list_[samples_per_bin:]
   remove_list.extend(list_)
 
-print("Removed: ", len(remove_list))
+# print("Removed: ", len(remove_list))
 data.drop(data.index[remove_list], inplace = True)
-print("Remaining: ", len(data))
+# print("Remaining: ", len(data))
+
+num_bins = 15
+hist, bins = np.histogram(data['steering'], num_bins)
+# print(bins)
+# plt.hist(data['steering'], bins=num_bins, alpha=0.5, color='blue', edgecolor='black')
+
+# # Add labels and title
+# plt.xlabel('Steering Angle')
+# plt.ylabel('Frequency')
+# plt.title('Steering Angle Histogram')
+
+# # Show the plot
+# plt.show()
 
 
 def load_img_steering(datadir, df):
   image_path = []
   steering = []
-  for i in range(len(data)):
+  offset = 0.333
+  for i in range(len(df)):
     indexed_data = data.iloc[i]
     center, left, right = indexed_data[0], indexed_data[1], indexed_data[2]
+    #center image path and steering value
     image_path.append(os.path.join(datadir, center.strip()))
     steering.append(float(indexed_data[3]))
+    #left image path and steering value
+    image_path.append(os.path.join(datadir, left.strip()))
+    steering.append(float(indexed_data[3])+offset)
+        #left image path and steering value
+    image_path.append(os.path.join(datadir, right.strip()))
+    steering.append(float(indexed_data[3])-offset)
+    
   image_paths = np.asarray(image_path)
   steerings = np.asarray(steering)
+
   return image_paths, steerings
+
+
+# load_img_steering(datadir+'/IMG', data)
+
 
 image_paths, steerings = load_img_steering(datadir+'/IMG', data)
 X_train, X_valid, y_train, y_valid = train_test_split(image_paths, steerings, test_size=0.2, random_state=6)
@@ -90,26 +120,25 @@ def nvidia_model():
   model.add(Convolution2D(48, kernel_size=(5,5), strides=(2,2), activation='elu'))
   model.add(Convolution2D(64, kernel_size=(3,3), activation='elu'))
   model.add(Convolution2D(64, kernel_size=(3,3), activation='elu'))
-  model.add(Dropout(0.5))
+  # model.add(Dropout(0.5))
   model.add(Flatten())
   model.add(Dense(100, activation = 'elu'))
-  model.add(Dropout(0.5))
+  # model.add(Dropout(0.5))
   model.add(Dense(50, activation = 'elu'))
-  model.add(Dropout(0.5))
+  # model.add(Dropout(0.5))
   model.add(Dense(10, activation = 'elu'))
-  model.add(Dropout(0.5))
+  # model.add(Dropout(0.5))
   model.add(Dense(1))
 
   optimizer = Adam(learning_rate = 0.001)
   model.compile(loss='mse', optimizer = optimizer)
   return model
 
-
 model = nvidia_model()
 print(model.summary())
 
 history = model.fit(X_train, y_train, epochs=30, validation_data = (X_valid, y_valid), batch_size=100, verbose=1, shuffle = 2)
 
-model.save('./model/model_1.h5')
+model.save('./model/model_1_onelap.h5')
 
 
