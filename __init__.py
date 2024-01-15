@@ -5,6 +5,7 @@ from keras.models import Sequential
 from keras.optimizers import Adam
 from keras.layers import Dense, Convolution2D, MaxPooling2D, Dropout, Flatten
 #from keras import load_model
+from tensorflow.keras.models import load_model
 import cv2
 import pandas as pd
 import random

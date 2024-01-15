@@ -34,6 +34,6 @@ def connect(sid, environ):
 
 
 if __name__ == '__main__':
-	model == load_model('/home/ciaran/SmartTech/SmartTechCA2/SmartTechCA2/alpha_model.h5')
+	model = load_model('./model/model_1.h5')
 	app = socketio.Middleware(sio, app)
 	eventlet.wsgi.server(eventlet.listen(('', 4567)), app)
