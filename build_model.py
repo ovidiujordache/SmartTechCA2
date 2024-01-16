@@ -218,14 +218,14 @@ def nvidia_model():
   model.add(Convolution2D(48, kernel_size=(5,5), strides=(2,2), activation='elu'))
   model.add(Convolution2D(64, kernel_size=(3,3), activation='elu'))
   model.add(Convolution2D(64, kernel_size=(3,3), activation='elu'))
-  model.add(Dropout(0.5))
+  # model.add(Dropout(0.5))
   model.add(Flatten())
   model.add(Dense(100, activation = 'elu'))
-  model.add(Dropout(0.5))
+  # model.add(Dropout(0.5))
   model.add(Dense(50, activation = 'elu'))
-  model.add(Dropout(0.5))
+  # model.add(Dropout(0.5))
   model.add(Dense(10, activation = 'elu'))
-  model.add(Dropout(0.5))
+  # model.add(Dropout(0.5))
   model.add(Dense(1))
 
   optimizer = Adam(learning_rate = 0.0001)
@@ -242,7 +242,7 @@ print(model.summary())
 
  
 
-history = model.fit(batch_generator(X_train, y_train,100,1),steps_per_epoch=100, epochs=20, 
+history = model.fit(batch_generator(X_train, y_train,100,1),steps_per_epoch=100, epochs=30, 
   validation_data = batch_generator(X_valid, y_valid,100,0), validation_steps=200, verbose=1, shuffle = 2)
 
-model.save('./model/model_1_track_2_onelap.h5')
+model.save('./model/model_2_track_2_onelap.h5')

@@ -12,7 +12,7 @@ class DriveServer:
 sio = socketio.Server()
 app = Flask(__name__)
 
-speed_limit =40
+speed_limit =24
 def send_control(steering_angle, throttle):
 	print("send control")
 	sio.emit('steer', data ={'steering_angle':steering_angle.__str__(), 'throttle':throttle.__str__()})
