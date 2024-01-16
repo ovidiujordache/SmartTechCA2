@@ -8,7 +8,7 @@ class BuildModel:
 		pass
 
 
-datadir = "/home/ovi/PROJECTS_YEAR_4/SMART_TECH/SmartTechCA2Data/track_1/one_lap/"
+datadir = "/home/ovi/PROJECTS_YEAR_4/SMART_TECH/SmartTechCA2Data/track_1/three_lap/"
 columns = ['center', 'left', 'right', 'steering', 'throttle', 'reverse', 'speed']
 data = pd.read_csv(os.path.join(datadir, 'driving_log.csv'), names = columns)
 # print(data.head)
@@ -139,6 +139,6 @@ print(model.summary())
 
 history = model.fit(X_train, y_train, epochs=30, validation_data = (X_valid, y_valid), batch_size=100, verbose=1, shuffle = 2)
 
-model.save('./model/model_1_onelap.h5')
+model.save('./model/model_1_threelap.h5')
 
 
