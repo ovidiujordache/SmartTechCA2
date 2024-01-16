@@ -12,8 +12,7 @@ class DriveServer:
 sio = socketio.Server()
 app = Flask(__name__)
 
-speed_limit = 30
-
+speed_limit =40
 def send_control(steering_angle, throttle):
 	print("send control")
 	sio.emit('steer', data ={'steering_angle':steering_angle.__str__(), 'throttle':throttle.__str__()})
@@ -33,7 +32,7 @@ def telemetry(sid, data):
 @sio.on('connect')
 def connect(sid, environ):
 	print("connected")
-	# send_control(0,0)
+	send_control(0,0)
 
 def img_preprocess(img):
 
@@ -46,6 +45,6 @@ def img_preprocess(img):
 
 
 if __name__ == '__main__':
-	model = load_model('./model/model_1_threelap.h5')
+	model = load_model('./model/model_1_track_2_onelap.h5')
 	app = socketio.Middleware(sio, app)
 	eventlet.wsgi.server(eventlet.listen(('', 4567)), app)
